@@ -79,7 +79,7 @@
 
   userForm.addEventListener('keyup', (event) => {
     if(event.keyCode === 13) {
-      if (userName.value == '' || userComment.value == '') {
+      if (userName.value.trim() == '' || userComment.value.trim() == '') {
         alert('Вы не ввели имя и/или комментарий');
         userName.value = '';
         userName.blur();
