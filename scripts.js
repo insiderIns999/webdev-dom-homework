@@ -117,7 +117,6 @@ function getUserCommentDate() {
 
 function sendComment() {
   const oldUserCommentsList = userCommentsList.innerHTML;
-  getUserCommentDate();
   userComments.push({
     name: userName.value,
     date: getUserCommentDate(),
@@ -138,7 +137,3 @@ send.addEventListener('click', () => {
   userCommentt.value = '';
   userCommentt.blur();
 });
-
-//-------------------------LIKES----------------------------
-
-console.log("It works!!!");
