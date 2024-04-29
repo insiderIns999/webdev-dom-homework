@@ -8,7 +8,7 @@ const userForm = document.getElementById('form');
 const commentsElements = document.querySelectorAll('.comment');
 const countUsersLikes = 0;
 const userNameComment = [userName, commentFieldElement];
-
+const uploadingData = document.getElementById('uploading-data');
 
 let comments = [];
 /*
@@ -176,6 +176,8 @@ userForm.addEventListener('keyup', (event) => {
     }
 
     else {
+      userForm.style.display = 'none';
+      uploadingData.style.display = 'block';
       sendComment();
       userName.blur();
       userName.value = '';
@@ -197,6 +199,7 @@ function getUserCommentDate() {
 }
 
 function sendComment() {
+  
   function replaceSymbols(string) {
     return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
   }
@@ -240,7 +243,9 @@ function sendComment() {
           initButtonsLikes();
           liElClick();
           editClick();
-          
+
+          uploadingData.style.display = 'none';
+          userForm.style.display = 'flex';
         });
       });
       /*
@@ -271,13 +276,17 @@ function sendComment() {
   editClick();
   liElClick();
   */
+
 };
 
 send.addEventListener('click', () => {
+  userForm.style.display = 'none';
+  uploadingData.style.display = 'block';
   sendComment();
   send.disabled = true;
   userName.value = '';
   userName.blur();
   commentFieldElement.value = '';
   commentFieldElement.blur();
+
 });
