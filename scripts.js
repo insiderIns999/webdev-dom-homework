@@ -29,7 +29,6 @@ let comments = [];
 ];
 */
 
-
 const fetchPromise = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
   method: 'GET',
 });
@@ -39,7 +38,7 @@ fetchPromise.then((response) => {
 
   jsonPromise.then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
-      
+
       return {
         name: comment.author.name,
         date: getUserCommentDate(comment.date),
@@ -47,7 +46,6 @@ fetchPromise.then((response) => {
         likes: comment.likes,
         isLiked: false,
       }
-
     });
 
     comments = appComments;
@@ -126,12 +124,12 @@ const renderComments = () => {
     return `
     <li class="comment">
 		  <div class="comment-header">
-			  <div>${comment.name/*.replace('<', '&lt;').replace('>', '&gt;')*/}</div>
+			  <div>${comment.name}</div>
 			  <div>${comment.date}</div>
 		  </div>
 		  <div class="comment-body">
 			  <div class="comment-text">
-			    ${comment.comment/*.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />')*/}
+			    ${comment.comment}
 			  </div>
 		  </div>
 		  <div class="comment-footer">
@@ -198,40 +196,43 @@ function getUserCommentDate() {
   return `${userDate}.${userMonth}.${userYear} ${userHours}:${userMinutes}`;
 }
 
-function replaceSymbols(string) {
-  string.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
-}
-
 function sendComment() {
+  function replaceSymbols(string) {
+    return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
+  }
+  
+  let afterReplaceUserName = replaceSymbols(userName.value);
+  let afterReplaceUserComment = replaceSymbols(commentFieldElement.value);
   fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
     method: 'POST',
     body: JSON.stringify({
-      'name': /*replaceSymbols(userName.value),*/userName.value.replace('<', '&lt;').replace('>', '&gt;'),
-      'text': /*replaceSymbols(commentFieldElement.value),*/commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
+      'name': afterReplaceUserName,
+      'text': afterReplaceUserComment,
     }),
   }).then((response) => {
     // Запускаем преобразовываем "сырые" данные от api в json
     // Подписываемся на результат преобразования
     response.json().then((responseData) => {
-          
+
       // Получили данные и рендерим их в приложении
+
       comments = responseData.comments;
       renderComments();
       initButtonsLikes();
       editClick();
       liElClick();
     });
-	});
-  
+  });
+
   //const oldCommentsList = commentsList.innerHTML;
   comments.push({
-    
+
     //name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
     date: getUserCommentDate(),
     //comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
     likes: countUsersLikes,
     isLiked: initButtonsLikes(),
-    
+
   });
 
   renderComments();
