@@ -30,6 +30,7 @@ let comments = [];
 */
 
 
+
 const fetchPromise = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
   method: 'GET',
 });
@@ -42,21 +43,35 @@ fetchPromise.then((response) => {
       
       return {
         name: comment.author.name,
-        date: getUserCommentDate(comment.date),
+        date: {
+          date = new Date(comment.date),
+          userDate = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
+          userMonth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1,
+          userYear = date.getFullYear().toString().substr(-2),
+          userHours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours(),
+          userMinutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes(),
+          return `${userDate}.${userMonth}.${userYear} ${userHours}:${userMinutes}`,
+        }
         comment: comment.text,
-        likes: comment.likes,
-        isLiked: false,
+        countLikes: comment.likes,
+        like: false,
       }
-
     });
 
     comments = appComments;
     renderComments();
-    initButtonsLikes();
-    liElClick();
-    editClick();
   });
 });
+
+function getUserCommentDate() {
+  const date = new Date(comment.date);
+  const userDate = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  const userMonth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+  const userYear = date.getFullYear().toString().substr(-2);
+  const userHours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+  const userMinutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+  return `${userDate}.${userMonth}.${userYear} ${userHours}:${userMinutes}`;
+}
 
 const liElClick = () => {
   const commentsElements = document.querySelectorAll('.comment');
@@ -85,11 +100,9 @@ const editClick = () => {
         commentFieldElement.value = '';
         save.style.display = 'none';
         send.style.display = 'inline-block';
-
         renderComments();
         initButtonsLikes();
         liElClick();
-        editClick();
       });
 
       event.stopPropagation();
@@ -101,13 +114,13 @@ const initButtonsLikes = () => {
   const buttonLikesElements = document.querySelectorAll('.like-button');
   buttonLikesElements.forEach((buttonElement, index) => {
     buttonElement.addEventListener('click', (event) => {
-      if (comments[index].isLiked) {
-        comments[index].likes = comments[index].likes - 1;
-        comments[index].isLiked = false;
+      if (comments[index].like) {
+        comments[index].countLikes = comments[index].countLikes - 1;
+        comments[index].like = false;
       }
       else {
-        comments[index].likes = comments[index].likes + 1;
-        comments[index].isLiked = true;
+        comments[index].countLikes = comments[index].countLikes + 1;
+        comments[index].like = true;
       }
       event.stopPropagation();
 
@@ -126,12 +139,12 @@ const renderComments = () => {
     return `
     <li class="comment">
 		  <div class="comment-header">
-			  <div>${comment.name/*.replace('<', '&lt;').replace('>', '&gt;')*/}</div>
+			  <div>${comment.name.replace('<', '&lt;').replace('>', '&gt;')}</div>
 			  <div>${comment.date}</div>
 		  </div>
 		  <div class="comment-body">
 			  <div class="comment-text">
-			    ${comment.comment/*.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />')*/}
+			    ${comment.comment.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />')}
 			  </div>
 		  </div>
 		  <div class="comment-footer">
@@ -141,20 +154,23 @@ const renderComments = () => {
           </button>
         </div>
         <div class="likes">
-          <span class="likes-counter">${comment.likes}</span>
-          <button class="like-button ${comment.isLiked ? '-active-like' : ''}"></button>
+          <span class="likes-counter">${comment.countLikes}</span>
+          <button class="like-button ${comment.like ? '-active-like' : ''}"></button>
         </div>
 		  </div>
 		</li>`;
   }).join('');
 
   commentsList.innerHTML = commentsHtml;
+
 };
 
 renderComments();
 initButtonsLikes();
 editClick();
 liElClick();
+
+let check;
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -189,7 +205,7 @@ userForm.addEventListener('keyup', (event) => {
 });
 
 function getUserCommentDate() {
-  const date = new Date();
+  const date = new Date(comment.date);
   const userDate = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   const userMonth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
   const userYear = date.getFullYear().toString().substr(-2);
@@ -198,40 +214,14 @@ function getUserCommentDate() {
   return `${userDate}.${userMonth}.${userYear} ${userHours}:${userMinutes}`;
 }
 
-function replaceSymbols(string) {
-  string.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
-}
-
 function sendComment() {
-  fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
-    method: 'POST',
-    body: JSON.stringify({
-      'name': /*replaceSymbols(userName.value),*/userName.value.replace('<', '&lt;').replace('>', '&gt;'),
-      'text': /*replaceSymbols(commentFieldElement.value),*/commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
-    }),
-  }).then((response) => {
-    // Запускаем преобразовываем "сырые" данные от api в json
-    // Подписываемся на результат преобразования
-    response.json().then((responseData) => {
-          
-      // Получили данные и рендерим их в приложении
-      comments = responseData.comments;
-      renderComments();
-      initButtonsLikes();
-      editClick();
-      liElClick();
-    });
-	});
-  
-  //const oldCommentsList = commentsList.innerHTML;
+  const oldCommentsList = commentsList.innerHTML;
   comments.push({
-    
-    //name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
+    name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
     date: getUserCommentDate(),
-    //comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
-    likes: countUsersLikes,
-    isLiked: initButtonsLikes(),
-    
+    comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
+    countLikes: countUsersLikes,
+    like: initButtonsLikes(),
   });
 
   renderComments();
