@@ -215,15 +215,46 @@ function sendComment() {
     response.json().then((responseData) => {
 
       // Получили данные и рендерим их в приложении
+      const fetchPromiseNew = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+        method: 'GET',
+      });
 
+      fetchPromiseNew.then((response) => {
+        const jsonPromiseNew = response.json();
+
+        jsonPromiseNew.then((responseData) => {
+          const appCommentsNew = responseData.comments.map((comment) => {
+
+            return {
+              name: comment.author.name,
+              date: getUserCommentDate(comment.date),
+              comment: comment.text,
+              likes: comment.likes,
+              isLiked: false,
+            }
+          });
+
+          comments = appCommentsNew;
+          
+          renderComments();
+          initButtonsLikes();
+          liElClick();
+          editClick();
+          
+        });
+      });
+      /*
       comments = responseData.comments;
+      
       renderComments();
       initButtonsLikes();
       editClick();
       liElClick();
+      */
     });
   });
 
+  /*
   //const oldCommentsList = commentsList.innerHTML;
   comments.push({
 
@@ -239,7 +270,8 @@ function sendComment() {
   initButtonsLikes();
   editClick();
   liElClick();
-}
+  */
+};
 
 send.addEventListener('click', () => {
   sendComment();
