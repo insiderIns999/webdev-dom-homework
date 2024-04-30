@@ -3,34 +3,64 @@ const userName = document.getElementById('user-name');
 const commentFieldElement = document.getElementById('user-comment');
 const save = document.getElementById('save');
 const send = document.getElementById('send');
-const userCommentsList = document.getElementById('user-comments');
+const commentsList = document.getElementById('user-comments');
 const userForm = document.getElementById('form');
 const commentsElements = document.querySelectorAll('.comment');
 const countUsersLikes = 0;
 const userNameComment = [userName, commentFieldElement];
+const uploadingData = document.getElementById('uploading-data');
 
-const userComments = [
-  {
-    name: 'Глеб Фокин',
-    date: getUserCommentDate(),
-    comment: 'Это будет первый комментарий на этой странице',
-    countLikes: 3,
-    like: false,
-  },
-  {
-    name: 'Варвара Н.',
-    date: getUserCommentDate(),
-    comment: 'Мне нравится как оформлена эта страница! ❤',
-    countLikes: 75,
-    like: true,
-  },
+let comments = [];
+/*
+{
+  name: 'Глеб Фокин',
+  date: getUserCommentDate(),
+  comment: 'Это будет первый комментарий на этой странице',
+  countLikes: 3,
+  like: false,
+},
+{
+  name: 'Варвара Н.',
+  date: getUserCommentDate(),
+  comment: 'Мне нравится как оформлена эта страница! ❤',
+  countLikes: 75,
+  like: true,
+},
 ];
+*/
+
+const fetchPromise = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+  method: 'GET',
+});
+
+fetchPromise.then((response) => {
+  const jsonPromise = response.json();
+
+  jsonPromise.then((responseData) => {
+    const appComments = responseData.comments.map((comment) => {
+
+      return {
+        name: comment.author.name,
+        date: getUserCommentDate(comment.date),
+        comment: comment.text,
+        likes: comment.likes,
+        isLiked: false,
+      }
+    });
+
+    comments = appComments;
+    renderComments();
+    initButtonsLikes();
+    liElClick();
+    editClick();
+  });
+});
 
 const liElClick = () => {
   const commentsElements = document.querySelectorAll('.comment');
   commentsElements.forEach((commentElement, index) => {
     commentElement.addEventListener('click', (event) => {
-      commentFieldElement.value = 'QUOTE_BEGIN' + userComments[index].name + ':\n' + userComments[index].comment + 'QUOTE_END ';
+      commentFieldElement.value = 'QUOTE_BEGIN' + comments[index].name + ':\n' + comments[index].comment + 'QUOTE_END ';
     });
   });
 }
@@ -39,23 +69,25 @@ const editClick = () => {
   const editButtons = document.querySelectorAll('.edit-button');
   editButtons.forEach((editButton, index) => {
     editButton.addEventListener('click', (event) => {
-      userName.value = userComments[index].name;
-      commentFieldElement.value = userComments[index].comment;
+      userName.value = comments[index].name;
+      commentFieldElement.value = comments[index].comment;
       send.style.display = 'none';
       save.style.display = 'inline-block';
 
       save.addEventListener('click', () => {
-        userComments[index].name = userName.value;
-        userComments[index].comment = commentFieldElement.value;
+        comments[index].name = userName.value;
+        comments[index].comment = commentFieldElement.value;
         userName.blur();
         userName.value = '';
         commentFieldElement.blur();
         commentFieldElement.value = '';
         save.style.display = 'none';
         send.style.display = 'inline-block';
-        renderUserComments();
+
+        renderComments();
         initButtonsLikes();
         liElClick();
+        editClick();
       });
 
       event.stopPropagation();
@@ -67,17 +99,17 @@ const initButtonsLikes = () => {
   const buttonLikesElements = document.querySelectorAll('.like-button');
   buttonLikesElements.forEach((buttonElement, index) => {
     buttonElement.addEventListener('click', (event) => {
-      if (userComments[index].like) {
-        userComments[index].countLikes = userComments[index].countLikes - 1;
-        userComments[index].like = false;
+      if (comments[index].isLiked) {
+        comments[index].likes = comments[index].likes - 1;
+        comments[index].isLiked = false;
       }
       else {
-        userComments[index].countLikes = userComments[index].countLikes + 1;
-        userComments[index].like = true;
+        comments[index].likes = comments[index].likes + 1;
+        comments[index].isLiked = true;
       }
       event.stopPropagation();
-      
-      renderUserComments();
+
+      renderComments();
       initButtonsLikes();
       editClick();
       liElClick();
@@ -87,42 +119,40 @@ const initButtonsLikes = () => {
 
 
 
-const renderUserComments = () => {
-  const userCommentsHtml = userComments.map((userComment) => {
-    return `<li class="comment">
+const renderComments = () => {
+  const commentsHtml = comments.map((comment) => {
+    return `
+    <li class="comment">
 		  <div class="comment-header">
-			<div>${userComment.name.replace('<', '&lt;').replace('>', '&gt;')}</div>
-			<div>${userComment.date}</div>
+			  <div>${comment.name}</div>
+			  <div>${comment.date}</div>
 		  </div>
 		  <div class="comment-body">
-			<div class="comment-text">
-			  ${userComment.comment.replace('<', '&lt;').replace('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />')}
-			</div>
+			  <div class="comment-text">
+			    ${comment.comment}
+			  </div>
 		  </div>
 		  <div class="comment-footer">
-      <div class="edit">
-        <button class="edit-button">
-          <img class="edit-img" src="edit.png" alt="edit" />
-        </button>
-      </div>
-			<div class="likes">
-			  <span class="likes-counter">${userComment.countLikes}</span>
-			  <button class="like-button ${userComment.like ? '-active-like' : ''}"></button>
-			</div>
+        <div class="edit">
+          <button class="edit-button">
+            <img class="edit-img" src="edit.png" alt="edit" />
+          </button>
+        </div>
+        <div class="likes">
+          <span class="likes-counter">${comment.likes}</span>
+          <button class="like-button ${comment.isLiked ? '-active-like' : ''}"></button>
+        </div>
 		  </div>
-		  </li>`;
+		</li>`;
   }).join('');
 
-  userCommentsList.innerHTML = userCommentsHtml;
-
+  commentsList.innerHTML = commentsHtml;
 };
 
-renderUserComments();
+renderComments();
 initButtonsLikes();
 editClick();
 liElClick();
-
-let check;
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -146,6 +176,8 @@ userForm.addEventListener('keyup', (event) => {
     }
 
     else {
+      userForm.style.display = 'none';
+      uploadingData.style.display = 'block';
       sendComment();
       userName.blur();
       userName.value = '';
@@ -167,26 +199,94 @@ function getUserCommentDate() {
 }
 
 function sendComment() {
-  const oldUserCommentsList = userCommentsList.innerHTML;
-  userComments.push({
-    name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
-    date: getUserCommentDate(),
-    comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
-    countLikes: countUsersLikes,
-    like: initButtonsLikes(),
+  
+  function replaceSymbols(string) {
+    return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
+  }
+  
+  let afterReplaceUserName = replaceSymbols(userName.value);
+  let afterReplaceUserComment = replaceSymbols(commentFieldElement.value);
+  fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+    method: 'POST',
+    body: JSON.stringify({
+      'name': afterReplaceUserName,
+      'text': afterReplaceUserComment,
+    }),
+  }).then((response) => {
+    // Запускаем преобразовываем "сырые" данные от api в json
+    // Подписываемся на результат преобразования
+    response.json().then((responseData) => {
+
+      // Получили данные и рендерим их в приложении
+      const fetchPromiseNew = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+        method: 'GET',
+      });
+
+      fetchPromiseNew.then((response) => {
+        const jsonPromiseNew = response.json();
+
+        jsonPromiseNew.then((responseData) => {
+          const appCommentsNew = responseData.comments.map((comment) => {
+
+            return {
+              name: comment.author.name,
+              date: getUserCommentDate(comment.date),
+              comment: comment.text,
+              likes: comment.likes,
+              isLiked: false,
+            }
+          });
+
+          comments = appCommentsNew;
+          
+          renderComments();
+          initButtonsLikes();
+          liElClick();
+          editClick();
+
+          uploadingData.style.display = 'none';
+          userForm.style.display = 'flex';
+        });
+      });
+      /*
+      comments = responseData.comments;
+      
+      renderComments();
+      initButtonsLikes();
+      editClick();
+      liElClick();
+      */
+    });
   });
 
-  renderUserComments();
+  /*
+  //const oldCommentsList = commentsList.innerHTML;
+  comments.push({
+
+    //name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
+    date: getUserCommentDate(),
+    //comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
+    likes: countUsersLikes,
+    isLiked: initButtonsLikes(),
+
+  });
+
+  renderComments();
   initButtonsLikes();
   editClick();
   liElClick();
-}
+  */
+
+};
 
 send.addEventListener('click', () => {
+  userForm.style.display = 'none';
+  uploadingData.style.display = 'block';
   sendComment();
   send.disabled = true;
   userName.value = '';
   userName.blur();
   commentFieldElement.value = '';
   commentFieldElement.blur();
+
 });

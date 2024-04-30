@@ -21,8 +21,25 @@ body {
     list-style: none;
   }
 
+  .uploading-data {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+  }
+
+  .uploading-data p {
+    font-size: 2em;
+    margin: 0;
+    padding-left: 100px;
+    padding-top: 10px;
+  }
+  .uploader {
+    float: left;
+  }
+
   .comment,
-  .add-form {
+  .add-form,
+  .uploading-data {
     width: 596px;
     box-sizing: border-box;
     background: radial-gradient(
