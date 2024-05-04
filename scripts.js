@@ -9,6 +9,9 @@ const commentsElements = document.querySelectorAll('.comment');
 const countUsersLikes = 0;
 const userNameComment = [userName, commentFieldElement];
 const uploadingData = document.getElementById('uploading-data');
+const h3 = document.getElementById('befor-loading-comments');
+
+//h3.style.display = 'block';
 
 let comments = [];
 /*
@@ -29,14 +32,18 @@ let comments = [];
 ];
 */
 
-const fetchPromise = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
-  method: 'GET',
-});
+const takeAndRender = () => {
+  return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+    method: 'GET',
+  });
+};
 
-fetchPromise.then((response) => {
-  const jsonPromise = response.json();
-
-  jsonPromise.then((responseData) => {
+takeAndRender()
+  .then((response) => {
+    h3.style.display = 'none';
+    return response.json();
+  })
+  .then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
 
       return {
@@ -50,11 +57,7 @@ fetchPromise.then((response) => {
 
     comments = appComments;
     renderComments();
-    initButtonsLikes();
-    liElClick();
-    editClick();
   });
-});
 
 const liElClick = () => {
   const commentsElements = document.querySelectorAll('.comment');
@@ -63,6 +66,18 @@ const liElClick = () => {
       commentFieldElement.value = 'QUOTE_BEGIN' + comments[index].name + ':\n' + comments[index].comment + 'QUOTE_END ';
     });
   });
+}
+
+function repeatTasks(i) {
+  comments[i].name = userName.value;
+  comments[i].comment = commentFieldElement.value;
+  userName.blur();
+  userName.value = '';
+  commentFieldElement.blur();
+  commentFieldElement.value = '';
+  save.style.display = 'none';
+  send.style.display = 'inline-block';
+  send.disabled = true;
 }
 
 const editClick = () => {
@@ -74,7 +89,15 @@ const editClick = () => {
       send.style.display = 'none';
       save.style.display = 'inline-block';
 
-      save.addEventListener('click', () => {
+      userForm.addEventListener('keyup', (event) => {
+        if (event.keyCode === 13) {
+          return repeatTasks(index);
+        }
+      });
+
+      save.addEventListener('click', (index) => {
+        repeatTasks(index);
+        /*
         comments[index].name = userName.value;
         comments[index].comment = commentFieldElement.value;
         userName.blur();
@@ -83,15 +106,22 @@ const editClick = () => {
         commentFieldElement.value = '';
         save.style.display = 'none';
         send.style.display = 'inline-block';
+        send.disabled = true;
+        */
 
         renderComments();
-        initButtonsLikes();
-        liElClick();
-        editClick();
       });
 
       event.stopPropagation();
     });
+  });
+};
+
+function delay(interval = 300) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, interval);
   });
 }
 
@@ -99,6 +129,17 @@ const initButtonsLikes = () => {
   const buttonLikesElements = document.querySelectorAll('.like-button');
   buttonLikesElements.forEach((buttonElement, index) => {
     buttonElement.addEventListener('click', (event) => {
+      delay(2000).then(() => {
+        buttonElement.classList.add('-loading-like');
+        comments[index].isLiked
+          ? comments[index].likes--
+          : comments[index].likes++;
+        comments[index].isLiked = !comments[index].isLiked;
+        comments[index].isLikeLoading = false;
+        renderComments();
+      });
+
+      /*
       if (comments[index].isLiked) {
         comments[index].likes = comments[index].likes - 1;
         comments[index].isLiked = false;
@@ -107,12 +148,11 @@ const initButtonsLikes = () => {
         comments[index].likes = comments[index].likes + 1;
         comments[index].isLiked = true;
       }
+      */
+
       event.stopPropagation();
 
       renderComments();
-      initButtonsLikes();
-      editClick();
-      liElClick();
     });
   });
 };
@@ -147,12 +187,13 @@ const renderComments = () => {
   }).join('');
 
   commentsList.innerHTML = commentsHtml;
+
+  initButtonsLikes();
+  editClick();
+  liElClick();
 };
 
 renderComments();
-initButtonsLikes();
-editClick();
-liElClick();
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -163,7 +204,7 @@ for (let i = 0; i < userNameComment.length; i++) {
       send.disabled = true;
     }
   });
-}
+};
 
 userForm.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
@@ -199,55 +240,33 @@ function getUserCommentDate() {
 }
 
 function sendComment() {
-  
+
   function replaceSymbols(string) {
     return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
   }
-  
+
   let afterReplaceUserName = replaceSymbols(userName.value);
   let afterReplaceUserComment = replaceSymbols(commentFieldElement.value);
-  fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
-    method: 'POST',
-    body: JSON.stringify({
-      'name': afterReplaceUserName,
-      'text': afterReplaceUserComment,
-    }),
-  }).then((response) => {
-    // Запускаем преобразовываем "сырые" данные от api в json
-    // Подписываемся на результат преобразования
-    response.json().then((responseData) => {
+  const addComment = () => {
+    return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+      method: 'POST',
+      body: JSON.stringify({
+        'name': afterReplaceUserName,
+        'text': afterReplaceUserComment,
+      }),
+    });
+  };
+
+  addComment()
+    .then((response) => {
+      // Запускаем преобразовываем "сырые" данные от api в json
+      // Подписываемся на результат преобразования
+      response.json()
+    })
+    .then((responseData) => {
 
       // Получили данные и рендерим их в приложении
-      const fetchPromiseNew = fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
-        method: 'GET',
-      });
-
-      fetchPromiseNew.then((response) => {
-        const jsonPromiseNew = response.json();
-
-        jsonPromiseNew.then((responseData) => {
-          const appCommentsNew = responseData.comments.map((comment) => {
-
-            return {
-              name: comment.author.name,
-              date: getUserCommentDate(comment.date),
-              comment: comment.text,
-              likes: comment.likes,
-              isLiked: false,
-            }
-          });
-
-          comments = appCommentsNew;
-          
-          renderComments();
-          initButtonsLikes();
-          liElClick();
-          editClick();
-
-          uploadingData.style.display = 'none';
-          userForm.style.display = 'flex';
-        });
-      });
+      return takeAndRender();
       /*
       comments = responseData.comments;
       
@@ -256,8 +275,32 @@ function sendComment() {
       editClick();
       liElClick();
       */
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((responseData) => {
+      const appCommentsNew = responseData.comments.map((comment) => {
+
+        return {
+          name: comment.author.name,
+          date: getUserCommentDate(comment.date),
+          comment: comment.text,
+          likes: comment.likes,
+          isLiked: false,
+        }
+      });
+
+      comments = appCommentsNew;
+
+      renderComments();
+      initButtonsLikes();
+      liElClick();
+      editClick();
+
+      uploadingData.style.display = 'none';
+      userForm.style.display = 'flex';
     });
-  });
 
   /*
   //const oldCommentsList = commentsList.innerHTML;
@@ -288,5 +331,4 @@ send.addEventListener('click', () => {
   userName.blur();
   commentFieldElement.value = '';
   commentFieldElement.blur();
-
 });
