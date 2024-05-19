@@ -1,21 +1,29 @@
 "use strict";
+
+import { takeAndRender } from './takeAndRender.js';
+//import { liElClick } from './liElClick.js';
+//import { editClick } from './editClick.js';
+//import { initButtonsLikes } from './initButtonsLikes.js';
+import { renderComments } from './renderComments.js';
+import { returnComment } from './renderComments.js';
+//import { returnNewComments } from './returnNewComments.js';
+
 const userName = document.getElementById('user-name');
 const commentFieldElement = document.getElementById('user-comment');
-const save = document.getElementById('save');
 const send = document.getElementById('send');
-const commentsList = document.getElementById('user-comments');
 const userForm = document.getElementById('form');
-const commentsElements = document.querySelectorAll('.comment');
-const countUsersLikes = 0;
+//const commentsElements = document.querySelectorAll('.comment');
+//const countUsersLikes = 0;
 const userNameComment = [userName, commentFieldElement];
 const uploadingData = document.getElementById('uploading-data');
 const h3 = document.getElementById('befor-loading-comments');
-const un = document.getElementById('user-name').value;
-const cfe = document.getElementById('user-comment').value;
+const userCommentValue = document.getElementById('user-comment').value;
+const usNameValue = document.getElementById('user-name').value;
+
+let comments = [];
 
 //h3.style.display = 'block';
 
-let comments = [];
 /*
 {
   name: 'Глеб Фокин',
@@ -34,11 +42,6 @@ let comments = [];
 ];
 */
 
-const takeAndRender = () => {
-  return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
-    method: 'GET',
-  });
-};
 
 takeAndRender()
   .then((response) => {
@@ -51,155 +54,10 @@ takeAndRender()
     }
   })
   .then((responseData) => {
-    const appComments = responseData.comments.map((comment) => {
-
-      return {
-        name: comment.author.name,
-        date: getUserCommentDate(comment.date),
-        comment: comment.text,
-        likes: comment.likes,
-        isLiked: false,
-      }
-    });
-
-    comments = appComments;
-    renderComments();
+    returnComment({ responseData, getUserCommentDate, comments, userForm, userCommentValue, usNameValue });
   });
 
-const liElClick = () => {
-  const commentsElements = document.querySelectorAll('.comment');
-  commentsElements.forEach((commentElement, index) => {
-    commentElement.addEventListener('click', (event) => {
-      commentFieldElement.value = 'QUOTE_BEGIN' + comments[index].name + ':\n' + comments[index].comment + 'QUOTE_END ';
-    });
-  });
-}
-
-function repeatTasks(i) {
-  comments[i].name = userName.value;
-  comments[i].comment = commentFieldElement.value;
-  userName.blur();
-  userName.value = '';
-  commentFieldElement.blur();
-  commentFieldElement.value = '';
-  save.style.display = 'none';
-  send.style.display = 'inline-block';
-  send.disabled = true;
-}
-
-const editClick = () => {
-  const editButtons = document.querySelectorAll('.edit-button');
-  editButtons.forEach((editButton, index) => {
-    editButton.addEventListener('click', (event) => {
-      userName.value = comments[index].name;
-      commentFieldElement.value = comments[index].comment;
-      send.style.display = 'none';
-      save.style.display = 'inline-block';
-
-      userForm.addEventListener('keyup', (event) => {
-        if (event.keyCode === 13) {
-          return repeatTasks(index);
-        }
-      });
-
-      save.addEventListener('click', (index) => {
-        repeatTasks(index);
-        /*
-        comments[index].name = userName.value;
-        comments[index].comment = commentFieldElement.value;
-        userName.blur();
-        userName.value = '';
-        commentFieldElement.blur();
-        commentFieldElement.value = '';
-        save.style.display = 'none';
-        send.style.display = 'inline-block';
-        send.disabled = true;
-        */
-
-        renderComments();
-      });
-
-      event.stopPropagation();
-    });
-  });
-};
-
-function delay(interval = 300) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, interval);
-  });
-}
-
-const initButtonsLikes = () => {
-  const buttonLikesElements = document.querySelectorAll('.like-button');
-  buttonLikesElements.forEach((buttonElement, index) => {
-    buttonElement.addEventListener('click', (event) => {
-      buttonElement.classList.add('-loading-like');
-      delay(2000).then(() => {
-        comments[index].isLiked
-          ? comments[index].likes--
-          : comments[index].likes++;
-        comments[index].isLiked = !comments[index].isLiked;
-        comments[index].isLikeLoading = false;
-        buttonElement.classList.remove('-loading-like');
-        renderComments();
-      });
-
-      /*
-      if (comments[index].isLiked) {
-        comments[index].likes = comments[index].likes - 1;
-        comments[index].isLiked = false;
-      }
-      else {
-        comments[index].likes = comments[index].likes + 1;
-        comments[index].isLiked = true;
-      }
-      */
-
-      event.stopPropagation();
-    });
-  });
-};
-
-
-
-const renderComments = () => {
-  const commentsHtml = comments.map((comment) => {
-    return `
-    <li class="comment">
-		  <div class="comment-header">
-			  <div>${comment.name}</div>
-			  <div>${comment.date}</div>
-		  </div>
-		  <div class="comment-body">
-			  <div class="comment-text">
-			    ${comment.comment}
-			  </div>
-		  </div>
-		  <div class="comment-footer">
-        <div class="edit">
-          <button class="edit-button">
-            <img class="edit-img" src="edit.png" alt="edit" />
-          </button>
-        </div>
-        <div class="likes">
-          <span class="likes-counter">${comment.likes}</span>
-          <button class="like-button ${comment.isLiked ? '-active-like' : ''}"></button>
-        </div>
-		  </div>
-		</li>`;
-  }).join('');
-
-  commentsList.innerHTML = commentsHtml;
-
-  initButtonsLikes();
-  editClick();
-  liElClick();
-};
-
-renderComments();
+renderComments({ userCommentValue, usNameValue, comments, userForm });
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -289,7 +147,7 @@ function sendComment() {
     .then((responseData) => {
 
       // Получили данные и рендерим их в приложении
-      return takeAndRender();
+      return takeAndRender({ responseData });
       /*
       comments = responseData.comments;
       
@@ -303,23 +161,15 @@ function sendComment() {
       return response.json();
     })
     .then((responseData) => {
-      const appCommentsNew = responseData.comments.map((comment) => {
+      //returnNewComments({ responseData, getUserCommentDate })
+      returnComment({ responseData, getUserCommentDate, comments });
 
-        return {
-          name: comment.author.name,
-          date: getUserCommentDate(comment.date),
-          comment: comment.text,
-          likes: comment.likes,
-          isLiked: false,
-        }
-      });
+      //comments = appCommentsNew;
 
-      comments = appCommentsNew;
-
-      renderComments();
-      initButtonsLikes();
-      liElClick();
-      editClick();
+      //renderComments();
+      //initButtonsLikes();
+      //liElClick();
+      //editClick();
 
       uploadingData.style.display = 'none';
       userForm.style.display = 'flex';
