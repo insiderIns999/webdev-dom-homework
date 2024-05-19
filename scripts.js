@@ -10,6 +10,8 @@ const countUsersLikes = 0;
 const userNameComment = [userName, commentFieldElement];
 const uploadingData = document.getElementById('uploading-data');
 const h3 = document.getElementById('befor-loading-comments');
+const un = document.getElementById('user-name').value;
+const cfe = document.getElementById('user-comment').value;
 
 //h3.style.display = 'block';
 
@@ -40,8 +42,13 @@ const takeAndRender = () => {
 
 takeAndRender()
   .then((response) => {
-    h3.style.display = 'none';
-    return response.json();
+    if (response.status === 500) {
+      throw new Error('Извините, что-то пошло не так. Повторите попытку позже.');
+    }
+    else {
+      h3.style.display = 'none';
+      return response.json();
+    }
   })
   .then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
@@ -252,15 +259,32 @@ function sendComment() {
       body: JSON.stringify({
         'name': afterReplaceUserName,
         'text': afterReplaceUserComment,
+        forceError: true
       }),
     });
   };
 
   addComment()
     .then((response) => {
-      // Запускаем преобразовываем "сырые" данные от api в json
-      // Подписываемся на результат преобразования
-      response.json()
+      if (response.status === 400) {
+        throw new Error('Имя и/или комментарий короче 3х символов');
+      }
+      else if (response.status === 500) {
+        userForm.style.display = 'none';
+        uploadingData.style.display = 'block';
+        sendComment();
+        userName.blur();
+        commentFieldElement.blur();
+        //throw new Error('Упал интернет. Повторите попытку позже.');
+      }
+      else {
+        // Запускаем преобразовываем "сырые" данные от api в json
+        // Подписываемся на результат преобразования
+        response.json();
+        userName.value = '';
+        commentFieldElement.value = '';
+        send.disabled = true;
+      }
     })
     .then((responseData) => {
 
@@ -299,6 +323,11 @@ function sendComment() {
 
       uploadingData.style.display = 'none';
       userForm.style.display = 'flex';
+    })
+    .catch((error) => {
+      uploadingData.style.display = 'none';
+      userForm.style.display = 'flex';
+      alert(error);
     });
 
   /*
@@ -318,16 +347,12 @@ function sendComment() {
   editClick();
   liElClick();
   */
-
 };
 
 send.addEventListener('click', () => {
   userForm.style.display = 'none';
   uploadingData.style.display = 'block';
   sendComment();
-  send.disabled = true;
-  userName.value = '';
   userName.blur();
-  commentFieldElement.value = '';
   commentFieldElement.blur();
 });
