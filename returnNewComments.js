@@ -1,4 +1,5 @@
 export function returnNewComments() {
+  
     const appCommentsNew = responseData.comments.map((comment) => {
 
         return {

@@ -7,18 +7,27 @@ import { takeAndRender } from './takeAndRender.js';
 import { renderComments } from './renderComments.js';
 import { returnComment } from './renderComments.js';
 //import { returnNewComments } from './returnNewComments.js';
+import { userFormAddEventListener } from './userFormAddEventListener.js';
+import { sendAddEventListener } from './sendAddEventListener.js';
+//import { send } from './variables.js';
+//import { h3 } from './variables.js';
+//import { userForm } from './variables.js';
+//import { userName } from './variables.js';
+//import { commentFieldElement } from './variables.js';
+import { userFormStyles } from './userFormAddEventListener.js';
+import { initButtonsLikes } from './initButtonsLikes.js';
 
-const userName = document.getElementById('user-name');
-const commentFieldElement = document.getElementById('user-comment');
-const send = document.getElementById('send');
-const userForm = document.getElementById('form');
 //const commentsElements = document.querySelectorAll('.comment');
 //const countUsersLikes = 0;
+const userName = document.getElementById('user-name');
+const commentFieldElement = document.getElementById('user-comment');
 const userNameComment = [userName, commentFieldElement];
-const uploadingData = document.getElementById('uploading-data');
+const userForm = document.getElementById('form');
+const send = document.getElementById('send');
 const h3 = document.getElementById('befor-loading-comments');
-const userCommentValue = document.getElementById('user-comment').value;
-const usNameValue = document.getElementById('user-name').value;
+const uploadingData = document.getElementById('uploading-data');
+const commentsList = document.getElementById('user-comments');
+const buttonLikesElements = document.querySelectorAll('.like-button');
 
 let comments = [];
 
@@ -54,10 +63,10 @@ takeAndRender()
     }
   })
   .then((responseData) => {
-    returnComment({ responseData, getUserCommentDate, comments, userForm, userCommentValue, usNameValue });
+    returnComment({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes });
   });
 
-renderComments({ userCommentValue, usNameValue, comments, userForm });
+renderComments({ comments, commentsList, buttonLikesElements, initButtonsLikes });
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -70,28 +79,7 @@ for (let i = 0; i < userNameComment.length; i++) {
   });
 };
 
-userForm.addEventListener('keyup', (event) => {
-  if (event.keyCode === 13) {
-    if (userName.value.trim() == '' || commentFieldElement.value.trim() == '') {
-      alert('Вы не ввели имя и/или комментарий');
-      userName.value = '';
-      userName.blur();
-      commentFieldElement.value = '';
-      commentFieldElement.blur();
-    }
-
-    else {
-      userForm.style.display = 'none';
-      uploadingData.style.display = 'block';
-      sendComment();
-      userName.blur();
-      userName.value = '';
-      commentFieldElement.blur();
-      commentFieldElement.value = '';
-      send.disabled = true;
-    }
-  }
-});
+userFormAddEventListener({ userForm });
 
 function getUserCommentDate() {
   const date = new Date();
@@ -103,7 +91,7 @@ function getUserCommentDate() {
   return `${userDate}.${userMonth}.${userYear} ${userHours}:${userMinutes}`;
 }
 
-function sendComment() {
+function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ ) {
 
   function replaceSymbols(string) {
     return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
@@ -124,25 +112,7 @@ function sendComment() {
 
   addComment()
     .then((response) => {
-      if (response.status === 400) {
-        throw new Error('Имя и/или комментарий короче 3х символов');
-      }
-      else if (response.status === 500) {
-        userForm.style.display = 'none';
-        uploadingData.style.display = 'block';
-        sendComment();
-        userName.blur();
-        commentFieldElement.blur();
-        //throw new Error('Упал интернет. Повторите попытку позже.');
-      }
-      else {
-        // Запускаем преобразовываем "сырые" данные от api в json
-        // Подписываемся на результат преобразования
-        response.json();
-        userName.value = '';
-        commentFieldElement.value = '';
-        send.disabled = true;
-      }
+      return userFormStyles(response);
     })
     .then((responseData) => {
 
@@ -162,7 +132,7 @@ function sendComment() {
     })
     .then((responseData) => {
       //returnNewComments({ responseData, getUserCommentDate })
-      returnComment({ responseData, getUserCommentDate, comments });
+      returnComment({ responseData, getUserCommentDate, uploadingData, buttonLikesElements, initButtonsLikes });
 
       //comments = appCommentsNew;
 
@@ -170,9 +140,9 @@ function sendComment() {
       //initButtonsLikes();
       //liElClick();
       //editClick();
-
-      uploadingData.style.display = 'none';
-      userForm.style.display = 'flex';
+    })
+    .then((response) => {
+      return userFormStyles({ response });
     })
     .catch((error) => {
       uploadingData.style.display = 'none';
@@ -199,10 +169,6 @@ function sendComment() {
   */
 };
 
-send.addEventListener('click', () => {
-  userForm.style.display = 'none';
-  uploadingData.style.display = 'block';
-  sendComment();
-  userName.blur();
-  commentFieldElement.blur();
-});
+sendComment(userName, commentFieldElement, uploadingData, userForm);
+
+sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement });
