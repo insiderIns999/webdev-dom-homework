@@ -2,7 +2,7 @@
 import { liElClick } from './liElClick.js';
 import { editClick } from './editClick.js';
 
-export function returnComment({ responseData, getUserCommentDate, uploadingData, comments, userForm, commentsList, initButtonsLikes, buttonLikesElements }) {
+export function returnComment({ responseData, getUserCommentDate, uploadingData, comments, userForm, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement }) {
 
   //commentsList();
 
@@ -17,13 +17,13 @@ export function returnComment({ responseData, getUserCommentDate, uploadingData,
         }
   });
     
-  comments = appComments, renderComments({ comments, commentsList, initButtonsLikes, buttonLikesElements });
+  comments = appComments, renderComments({ comments, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement });
 
   uploadingData.style.display = 'none';
   userForm.style.display = 'flex';
 }
 
-export const renderComments = ({ comments, commentsList, initButtonsLikes, buttonLikesElements }) => {
+export const renderComments = ({ comments, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement }) => {
 
   const commentsHtml = comments.map((comment) => {
     return `

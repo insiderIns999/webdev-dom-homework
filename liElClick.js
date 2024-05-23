@@ -1,13 +1,9 @@
-import { commentsElements } from './variables.js';
-import { commentFieldElement } from './variables.js';
-
-export const liElClick = ({ comments }) => {
+export const liElClick = ({ comments, commentFieldElement }) => {
 
     //commentsElements();
     const commentsElements = document.querySelectorAll('.comment');
-    commentFieldElement();
 
-    commentsElements.forEach((commentElement, index) => {
+    commentsElements.forEach((commentElement, commentFieldElement, comments, index) => {
         commentElement.addEventListener('click', (event) => {
             return commentFieldElement = 'QUOTE_BEGIN' + comments[index].name + ':\n' + comments[index].comment + 'QUOTE_END ';
         });

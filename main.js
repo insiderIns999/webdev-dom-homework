@@ -63,10 +63,10 @@ takeAndRender()
     }
   })
   .then((responseData) => {
-    returnComment({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes });
+    returnComment({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
   });
 
-renderComments({ comments, commentsList, buttonLikesElements, initButtonsLikes });
+renderComments({ comments, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -132,7 +132,7 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
     })
     .then((responseData) => {
       //returnNewComments({ responseData, getUserCommentDate })
-      returnComment({ responseData, getUserCommentDate, uploadingData, buttonLikesElements, initButtonsLikes });
+      returnComment({ responseData, getUserCommentDate, uploadingData, buttonLikesElements, initButtonsLikes, commentFieldElement });
 
       //comments = appCommentsNew;
 
@@ -168,7 +168,5 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
   liElClick();
   */
 };
-
-sendComment(userName, commentFieldElement, uploadingData, userForm);
 
 sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement });

@@ -1,5 +1,3 @@
-
-
 export function sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement }) {
 
     send.addEventListener('click', () => {
