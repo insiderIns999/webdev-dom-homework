@@ -6,7 +6,7 @@ import { takeAndRender } from './takeAndRender.js';
 //import { initButtonsLikes } from './initButtonsLikes.js';
 import { renderComments } from './renderComments.js';
 import { returnComment } from './renderComments.js';
-//import { returnNewComments } from './returnNewComments.js';
+import { returnNewComments } from './returnNewComments.js';
 import { userFormAddEventListener } from './userFormAddEventListener.js';
 import { sendAddEventListener } from './sendAddEventListener.js';
 //import { send } from './variables.js';
@@ -117,7 +117,7 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
     .then((responseData) => {
 
       // Получили данные и рендерим их в приложении
-      return takeAndRender({ responseData });
+      return takeAndRender({ /*responseData*/ });
       /*
       comments = responseData.comments;
       
@@ -132,7 +132,7 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
     })
     .then((responseData) => {
       //returnNewComments({ responseData, getUserCommentDate })
-      returnComment({ responseData, getUserCommentDate, uploadingData, buttonLikesElements, initButtonsLikes, commentFieldElement });
+      returnComment({ responseData, getUserCommentDate, uploadingData, comments, buttonLikesElements, initButtonsLikes, commentFieldElement });
 
       //comments = appCommentsNew;
 
@@ -144,10 +144,13 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
     .then((response) => {
       return userFormStyles({ response });
     })
-    .catch((error) => {
+    .then((responseData) => {
+      return returnNewComments({ responseData, comments, commentsList });
+    })
+    .catch((/*error*/) => {
       uploadingData.style.display = 'none';
       userForm.style.display = 'flex';
-      alert(error);
+      //alert(error);
     });
 
   /*

@@ -17,7 +17,9 @@ export function returnComment({ responseData, getUserCommentDate, uploadingData,
         }
   });
     
-  comments = appComments, renderComments({ comments, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement });
+  comments = appComments;
+  
+  renderComments({ comments, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement });
 
   uploadingData.style.display = 'none';
   userForm.style.display = 'flex';
