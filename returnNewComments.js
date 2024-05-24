@@ -1,4 +1,4 @@
-export function returnNewComments({ responseData, comments, commentsList }) {
+export function returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement }) {
   
     const appCommentsNew = responseData.comments.map((comment) => {
 
@@ -10,6 +10,8 @@ export function returnNewComments({ responseData, comments, commentsList }) {
           isLiked: false,
         }
 
-        comments = appCommentsNew;
     });
+
+    comments = appCommentsNew;
+    renderComments({ comments, commentsList, initButtonsLikes, buttonLikesElements, commentFieldElement });
 }

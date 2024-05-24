@@ -131,8 +131,8 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
       return response.json();
     })
     .then((responseData) => {
-      //returnNewComments({ responseData, getUserCommentDate })
-      returnComment({ responseData, getUserCommentDate, uploadingData, comments, buttonLikesElements, initButtonsLikes, commentFieldElement });
+      returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
+      //returnComment({ responseData, getUserCommentDate, uploadingData, comments, buttonLikesElements, initButtonsLikes, commentFieldElement });
 
       //comments = appCommentsNew;
 
@@ -144,9 +144,9 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
     .then((response) => {
       return userFormStyles({ response });
     })
-    .then((responseData) => {
-      return returnNewComments({ responseData, comments, commentsList });
-    })
+    //.then((responseData) => {
+    //  returnNewComments({ responseData, comments, renderComments });
+    //})
     .catch((/*error*/) => {
       uploadingData.style.display = 'none';
       userForm.style.display = 'flex';
