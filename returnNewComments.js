@@ -1,4 +1,6 @@
-export function returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement }) {
+import { renderComments } from "./renderComments.js";
+
+export function returnNewComments({ responseData, comments, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement }) {
   
     const appCommentsNew = responseData.comments.map((comment) => {
 

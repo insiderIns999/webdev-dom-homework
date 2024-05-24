@@ -55,7 +55,7 @@ export const renderComments = ({ comments, commentsList, initButtonsLikes, butto
 
   commentsList.innerHTML = commentsHtml;
   
-  initButtonsLikes({ comments, renderComments, buttonLikesElements });
+  initButtonsLikes({ renderComments, buttonLikesElements, comments });
   liElClick({ comments });
   editClick({ comments });
 

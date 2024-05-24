@@ -6,12 +6,15 @@ function delay(interval = 300) {
     });
 }
 
-export const initButtonsLikes = ({ comments, renderComments, buttonLikesElements }) => {
+export const initButtonsLikes = ({ renderComments, buttonLikesElements, comments }) => {
 
     //buttonLikesElements();
 
-    buttonLikesElements.forEach((buttonElement, index) => {
+    buttonLikesElements.forEach((buttonElement, index, comments) => {
         buttonElement.addEventListener('click', (event) => {
+
+            event.stopPropagation();
+
             buttonElement.classList.add('-loading-like');
             delay(2000).then(() => {
                 comments[index].isLiked
@@ -33,8 +36,6 @@ export const initButtonsLikes = ({ comments, renderComments, buttonLikesElements
                 comments[index].isLiked = true;
             }
             */
-
-            event.stopPropagation();
         });
     });
 };

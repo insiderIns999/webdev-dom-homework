@@ -131,7 +131,7 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
       return response.json();
     })
     .then((responseData) => {
-      returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
+      return returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
       //returnComment({ responseData, getUserCommentDate, uploadingData, comments, buttonLikesElements, initButtonsLikes, commentFieldElement });
 
       //comments = appCommentsNew;
@@ -172,4 +172,4 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
   */
 };
 
-sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement });
+sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement, renderComments, comments, commentsList, initButtonsLikes, buttonLikesElements, h3, getUserCommentDate });
