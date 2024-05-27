@@ -27,7 +27,6 @@ const send = document.getElementById('send');
 const h3 = document.getElementById('befor-loading-comments');
 const uploadingData = document.getElementById('uploading-data');
 const commentsList = document.getElementById('user-comments');
-const buttonLikesElements = document.querySelectorAll('.like-button');
 
 let comments = [];
 
@@ -63,10 +62,10 @@ takeAndRender()
     }
   })
   .then((responseData) => {
-    returnComment({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
+    returnComment({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, initButtonsLikes, commentFieldElement });
   });
 
-renderComments({ comments, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
+renderComments({ comments, commentsList, initButtonsLikes, commentFieldElement });
 
 for (let i = 0; i < userNameComment.length; i++) {
   userNameComment[i].addEventListener('input', () => {
@@ -131,8 +130,8 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
       return response.json();
     })
     .then((responseData) => {
-      return returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, buttonLikesElements, initButtonsLikes, commentFieldElement });
-      //returnComment({ responseData, getUserCommentDate, uploadingData, comments, buttonLikesElements, initButtonsLikes, commentFieldElement });
+      return returnNewComments({ comments, responseData, getUserCommentDate, uploadingData, userForm, commentsList, initButtonsLikes, commentFieldElement });
+      //returnComment({ responseData, getUserCommentDate, uploadingData, comments, initButtonsLikes, commentFieldElement });
 
       //comments = appCommentsNew;
 
@@ -172,4 +171,4 @@ function sendComment(/*userName, commentFieldElement, uploadingData, userForm*/ 
   */
 };
 
-sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement, renderComments, comments, commentsList, initButtonsLikes, buttonLikesElements, h3, getUserCommentDate });
+sendAddEventListener({ send, userForm, uploadingData, sendComment, userName, commentFieldElement, renderComments, comments, commentsList, initButtonsLikes, h3, getUserCommentDate });
