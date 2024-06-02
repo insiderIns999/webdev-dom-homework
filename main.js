@@ -5,18 +5,20 @@ import { takeAndRender } from "./api.js";
 import { renderComments } from "./renderComments.js";
 import { sendDisabled } from "./sendDisabled.js";
 import { getUserCommentDate } from "./functionUserDate.js";
+import { editClick } from "./editClick.js";
+import { liElClick } from "./liElClick.js";
+import { initButtonsLikes } from "./initButtonsLikes.js";
+import { sendEventListener } from "./sendEventListener.js";
 
-const userName = document.getElementById('user-name');
-const commentFieldElement = document.getElementById('user-comment');
+export const userName = document.getElementById('user-name');
+export const commentFieldElement = document.getElementById('user-comment');
 
-const save = document.getElementById('save');
-const send = document.getElementById('send');
+export const send = document.getElementById('send');
 
-const userForm = document.getElementById('form');
+export const userForm = document.getElementById('form');
 //const countUsersLikes = 0;
 
-const uploadingData = document.getElementById('uploading-data');
-
+export const uploadingData = document.getElementById('uploading-data');
 
 //h3.style.display = 'block';
 
@@ -41,18 +43,6 @@ export const updateComments = newComments => {
 },
 ];
 */
-
-const liElClick = () => {
-  
-  const commentsElements = document.querySelectorAll('.comment');
-
-  commentsElements.forEach((commentElement, index) => {
-    commentElement.addEventListener('click', (event) => {
-      commentFieldElement.value = 'QUOTE_BEGIN' + comments[index].name + ':\n' + comments[index].comment + 'QUOTE_END ';
-    });
-  });
-
-}
 
 takeAndRender()
   .then((response) => {
@@ -101,100 +91,11 @@ function repeatTasks(i) {
 }
 */
 
-const editClick = () => {
-  const editButtons = document.querySelectorAll('.edit-button');
-  editButtons.forEach((editButton, index) => {
-    editButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-
-      userName.value = comments[index].name;
-      commentFieldElement.value = comments[index].comment;
-      send.style.display = 'none';
-      save.style.display = 'inline-block';
-
-      save.addEventListener('click', () => {
-        alert('Извините данная опция сейчас не доступна.');
-        userName.value = '';
-        userName.blur();
-        commentFieldElement.value = '';
-        commentFieldElement.blur();
-        send.style.display = 'inline-block';
-        save.style.display = 'none';
-      });
-    });
-  });
-};
-
-function delay(interval = 300) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, interval);
-  });
-}
-
-function initButtonsLikes() {
-  const buttonLikesElements = document.querySelectorAll('.like-button');
-  buttonLikesElements.forEach((buttonElement, index) => {
-    buttonElement.addEventListener('click', (event) => {
-
-      event.stopPropagation();
-
-      buttonElement.classList.add('-loading-like');
-      delay(2000).then(() => {
-        comments[index].isLiked
-          ? --comments[index].likes
-          : ++comments[index].likes;
-        comments[index].isLiked = !comments[index].isLiked;
-        comments[index].isLikeLoading = false;
-        buttonElement.classList.remove('-loading-like');
-        
-        renderComments();
-        initButtonsLikes();
-      });
-
-      /*
-      if (comments[index].isLiked) {
-        comments[index].likes = comments[index].likes - 1;
-        comments[index].isLiked = false;
-      }
-      else {
-        comments[index].likes = comments[index].likes + 1;
-        comments[index].isLiked = true;
-      }
-      */
-    });
-  });
-};
-
 //renderComments();
 
 sendDisabled({ send, userName, commentFieldElement });
 
-userForm.addEventListener('keyup', (event) => {
-  if (event.keyCode === 13) {
-    if (userName.value.trim() == '' || commentFieldElement.value.trim() == '') {
-      alert('Вы не ввели имя и/или комментарий');
-      userName.value = '';
-      userName.blur();
-      commentFieldElement.value = '';
-      commentFieldElement.blur();
-    }
-
-    else {
-      userForm.style.display = 'none';
-      uploadingData.style.display = 'block';
-      sendComment();
-      userName.blur();
-      userName.value = '';
-      commentFieldElement.blur();
-      commentFieldElement.value = '';
-      send.disabled = true;
-    }
-  }
-});
-
-function sendComment(afterReplaceUserName, afterReplaceUserComment) {
+export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
 
   addComment({ name: afterReplaceUserName, text: afterReplaceUserComment })
   .then((response) => {
@@ -284,20 +185,4 @@ function sendComment(afterReplaceUserName, afterReplaceUserComment) {
   */
 };
 
-send.addEventListener('click', () => {
-  const userName = document.getElementById('user-name');
-  const commentFieldElement = document.getElementById('user-comment');
-  
-  function replaceSymbols(string) {
-    return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
-  }
-  
-  let afterReplaceUserName = replaceSymbols(userName.value);
-  let afterReplaceUserComment = replaceSymbols(commentFieldElement.value);
-
-  userForm.style.display = 'none';
-  uploadingData.style.display = 'block';
-  sendComment(afterReplaceUserName, afterReplaceUserComment);
-  userName.blur();
-  commentFieldElement.blur();
-});
+sendEventListener();
