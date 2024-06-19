@@ -186,3 +186,5 @@ export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
   liElClick();
   */
 };
+
+// добавил этот коммент, чтобы обновить данные на своем репозитории

@@ -45,3 +45,5 @@ export const renderCommentsForm = () => {
     sendDisabled({ send, userName, commentFieldElement });
     sendEventListener();
 };
+
+// добавил этот коммент, чтобы обновить данные на своем репозитории

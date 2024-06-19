@@ -43,3 +43,5 @@ export function login({ login, password }) {
     return response.json();
   });
 };
+
+// добавил этот коммент, чтобы обновить данные на своем репозитории

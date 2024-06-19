@@ -13,3 +13,5 @@ export function sendDisabled({ send, userName, commentFieldElement }) {
       });
     };
 }
+
+// добавил этот коммент, чтобы обновить данные на своем репозитории
