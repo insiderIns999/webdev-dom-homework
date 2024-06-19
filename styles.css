@@ -188,3 +188,36 @@ body {
   .-loading-like {
     animation: rotating 2s linear infinite;
   }
+
+.reg-form, .auth-form {
+  display: flex;
+  align-items: center;
+}
+
+.reg-form input, .reg-form button, .auth-form input, .auth-form button {
+  width: 90%;
+}
+
+.reg-form-row, .auth-form-row {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auth-form-row {
+  width: 110%;
+}
+
+.auth-form-button {
+  padding: 15px 190px;
+  box-sizing: border-box;
+}
+
+.reg-form button {
+  padding: 15px 190px;
+  box-sizing: border-box;
+}
+
+.white {
+  color: #fff;
+}

@@ -3,12 +3,14 @@
 import { addComment } from "./api.js";
 import { takeAndRender } from "./api.js";
 import { renderComments } from "./renderComments.js";
-import { sendDisabled } from "./sendDisabled.js";
+
 import { getUserCommentDate } from "./functionUserDate.js";
 import { editClick } from "./editClick.js";
 import { liElClick } from "./liElClick.js";
 import { initButtonsLikes } from "./initButtonsLikes.js";
-import { sendEventListener } from "./sendEventListener.js";
+
+import { authForm } from "./auth.js";
+
 
 export const userName = document.getElementById('user-name');
 export const commentFieldElement = document.getElementById('user-comment');
@@ -43,6 +45,8 @@ export const updateComments = newComments => {
 },
 ];
 */
+
+authForm();
 
 takeAndRender()
   .then((response) => {
@@ -92,8 +96,6 @@ function repeatTasks(i) {
 */
 
 //renderComments();
-
-sendDisabled({ send, userName, commentFieldElement });
 
 export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
 
@@ -184,5 +186,3 @@ export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
   liElClick();
   */
 };
-
-sendEventListener();

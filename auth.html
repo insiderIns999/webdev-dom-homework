@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Форма авторизации</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="form-auth" class="add-form auth-form">
+        <input id="user-login" type="text" name="login" class="add-form-name" placeholder="Введите логин" />
+        <br />
+        <input id="user-password" type="password" name="password" class="add-form-name" placeholder="Введите пароль" />
+        <div class="add-form-row auth-form-row">
+          <button id="auth-button" class="auth-form-button add-form-button" disabled>Войти</button>
+        </div>
+        <a href="index.html">Перейти на страницу комментариев</a>
+        <p>Если не зарегистрированы,
+          <a href="reg.html"> Зарегистрироваться</aa>
+        </ap>
+      </div>
+      <div id="uploading-data" class="uploading-data">
+        <img class="uploader" src="loader.gif" alt="Индикатор загрузки" />
+        <p>Выполняется регистрация...</p>
+      </div>
+    </div>
+  </body>
+  <script type="module" src="auth.js"></script>
+</html>

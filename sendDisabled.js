@@ -12,4 +12,4 @@ export function sendDisabled({ send, userName, commentFieldElement }) {
         }
       });
     };
-  }
+}
