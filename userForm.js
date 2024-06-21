@@ -2,7 +2,7 @@ import { userForm } from './main.js';
 import { userName } from './main.js';
 import { commentFieldElement } from './main.js';
 import { uploadingData } from './main.js';
-import { send } from './main.js';
+import { send } from './commentForm.js';
 import { sendComment } from './main.js';
 
 export function userFormStyles() {

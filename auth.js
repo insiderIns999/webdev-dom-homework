@@ -2,6 +2,7 @@ import { login } from './api.js';
 import { token } from './api.js';
 import { updateToken } from './api.js';
 import { renderCommentsForm } from './commentForm.js';
+import { sendEventListener } from './sendEventListener.js';
 
 import { userNameFromApi } from './commentForm.js';
 import { updateUserName } from './commentForm.js';
@@ -54,14 +55,14 @@ export const authForm = () => {
             });
         };
 
-        buttonElement.addEventListener('click', () => {
+        buttonElement.addEventListener('click', ({ sendEventListener }) => {
             login({
                 login: loginInputElement.value,
                 password: passwordInputElement.value,
             }).then((responseData) => {
                 updateToken(responseData.user.token);
                 updateUserName(responseData.user.name);
-                return renderCommentsForm();
+                return renderCommentsForm({ sendEventListener });
             })
         });
     });

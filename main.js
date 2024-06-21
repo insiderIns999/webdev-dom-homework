@@ -3,19 +3,12 @@
 import { addComment } from "./api.js";
 import { takeAndRender } from "./api.js";
 import { renderComments } from "./renderComments.js";
-
 import { getUserCommentDate } from "./functionUserDate.js";
 import { editClick } from "./editClick.js";
 import { liElClick } from "./liElClick.js";
 import { initButtonsLikes } from "./initButtonsLikes.js";
-
 import { authForm } from "./auth.js";
-
-
-export const userName = document.getElementById('user-name');
-export const commentFieldElement = document.getElementById('user-comment');
-
-export const send = document.getElementById('send');
+import { send } from "./commentForm.js";
 
 export const userForm = document.getElementById('form');
 //const countUsersLikes = 0;

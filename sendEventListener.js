@@ -1,7 +1,7 @@
-import { send } from "./main.js";
 import { sendComment } from "./main.js";
 import { userForm } from "./main.js";
 import { uploadingData } from "./main.js";
+import { send } from "./commentForm.js";
 
 export function sendEventListener() {
   send.addEventListener('click', () => {

@@ -1,18 +1,19 @@
 import { sendDisabled } from "./sendDisabled.js";
-import { sendEventListener } from "./sendEventListener.js";
-import { userName } from "./main.js";
+//import { sendEventListener } from "./sendEventListener.js";
 
+export const send = document.getElementById('send');
+export const userName = document.getElementById('user-name');
+
+export const commentFieldElement = document.getElementById('user-comment');
 
 export let userNameFromApi;
 export const updateUserName = (newUserName) => {
     userNameFromApi = newUserName;
 };
 
-export const renderCommentsForm = () => {
+export const renderCommentsForm = ({ sendEventListener }) => {
 
     const commentFormElement = document.getElementById('add-comment-form');
-
-    console.log(commentFormElement);
 
     const commentsFormHtml = `
     <div id="form" class="add-form">
@@ -42,8 +43,8 @@ export const renderCommentsForm = () => {
     userNameElement.value = `${userNameFromApi}`;
     userNameElement.disabled = true;
 
-    sendDisabled({ send, userName, commentFieldElement });
-    sendEventListener();
+    sendDisabled({ userNameFromApi, commentFieldElement });
+    sendEventListener({ send });
 };
 
 // добавил этот коммент, чтобы обновить данные на своем репозитории

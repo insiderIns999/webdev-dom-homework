@@ -1,7 +1,7 @@
 import { comments } from "./main.js";
-import { userName } from "./main.js";
-import { commentFieldElement } from "./main.js";
-import { send } from "./main.js";
+import { userName } from "./commentForm.js";
+import { commentFieldElement } from "./commentForm.js";
+import { send } from "./commentForm.js";
 
 export const editClick = () => {
     const editButtons = document.querySelectorAll('.edit-button');

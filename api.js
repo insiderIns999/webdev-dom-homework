@@ -13,8 +13,6 @@ export function takeAndRender() {
 
 export function addComment({ name, text }) {
 
-    console.log();
-
     return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
       method: 'POST',
       body: JSON.stringify({
@@ -29,8 +27,6 @@ export function addComment({ name, text }) {
 };
 
 export function login({ login, password }) {
-
-  console.log(login, password);
 
   return fetch(authorizationURL, {
     method: 'POST',

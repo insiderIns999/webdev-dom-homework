@@ -1,4 +1,4 @@
-import { commentFieldElement } from "./main.js";
+import { commentFieldElement } from "./commentForm.js";
 import { comments } from "./main.js";
 
 export const liElClick = () => {
