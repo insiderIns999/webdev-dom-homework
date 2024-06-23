@@ -16,12 +16,11 @@ export function takeAndRender() {
   })
 };
 
-export function addComment({ name, text }) {
+export function addComment({ text }) {
 
     return fetch(apiURL, {
       method: 'POST',
       body: JSON.stringify({
-        'name': name,
         'text': text,
         headers: {
           Authorization: `Bearer ${token}`,
