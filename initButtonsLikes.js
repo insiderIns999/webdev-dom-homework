@@ -28,17 +28,6 @@ export function initButtonsLikes() {
           renderComments();
           initButtonsLikes();
         });
-  
-        /*
-        if (comments[index].isLiked) {
-          comments[index].likes = comments[index].likes - 1;
-          comments[index].isLiked = false;
-        }
-        else {
-          comments[index].likes = comments[index].likes + 1;
-          comments[index].isLiked = true;
-        }
-        */
       });
     });
   };

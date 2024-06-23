@@ -5,15 +5,17 @@ export const updateToken = (newToken) => {
   token = newToken;
 };
 
+const apiURL = 'https://wedev-api.sky.pro/api/v2/oleg-gagarin/comments';
+
 export function takeAndRender() {
-  return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+  return fetch(apiURL, {
     method: 'GET',
   })
 };
 
 export function addComment({ name, text }) {
 
-    return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+    return fetch(apiURL, {
       method: 'POST',
       body: JSON.stringify({
         'name': name,
@@ -39,5 +41,3 @@ export function login({ login, password }) {
     return response.json();
   });
 };
-
-// добавил этот коммент, чтобы обновить данные на своем репозитории

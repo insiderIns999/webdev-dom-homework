@@ -8,36 +8,17 @@ import { editClick } from "./editClick.js";
 import { liElClick } from "./liElClick.js";
 import { initButtonsLikes } from "./initButtonsLikes.js";
 import { authForm } from "./auth.js";
-import { send } from "./commentForm.js";
+import { userNameFromApi } from "./commentForm.js";
 
 export const userForm = document.getElementById('form');
-//const countUsersLikes = 0;
+
 
 export const uploadingData = document.getElementById('uploading-data');
-
-//h3.style.display = 'block';
 
 export let comments = [];
 export const updateComments = newComments => {
   comments = newComments;
 }
-/*
-{
-  name: 'Глеб Фокин',
-  date: getUserCommentDate(),
-  comment: 'Это будет первый комментарий на этой странице',
-  countLikes: 3,
-  like: false,
-},
-{
-  name: 'Варвара Н.',
-  date: getUserCommentDate(),
-  comment: 'Мне нравится как оформлена эта страница! ❤',
-  countLikes: 75,
-  like: true,
-},
-];
-*/
 
 authForm();
 
@@ -74,26 +55,12 @@ takeAndRender()
       liElClick();
   });
 
-/*
-function repeatTasks(i) {
-  comments[i].name = userName.value;
-  comments[i].comment = commentFieldElement.value;
-  userName.blur();
-  userName.value = '';
-  commentFieldElement.blur();
-  commentFieldElement.value = '';
-  save.style.display = 'none';
-  send.style.display = 'inline-block';
-  send.disabled = true;
-}
-*/
+export function sendComment(afterReplaceUserComment) {
 
-//renderComments();
-
-export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
-
-  addComment({ name: afterReplaceUserName, text: afterReplaceUserComment })
+  addComment({ name: userNameFromApi, text: afterReplaceUserComment })
   .then((response) => {
+    const commentFieldElement = document.getElementById('user-comment');
+    const send = document.getElementById('send');
       if (response.status === 400) {
         throw new Error('Имя и/или комментарий короче 3х символов');
       }
@@ -101,40 +68,23 @@ export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
         userForm.style.display = 'none';
         uploadingData.style.display = 'block';
         sendComment();
-        userName.blur();
         commentFieldElement.blur();
-        userName.value = '';
         commentFieldElement.value = '';
         send.disabled = true;
-        //throw new Error('Упал интернет. Повторите попытку позже.');
       }
       else {
-        // Запускаем преобразовываем "сырые" данные от api в json
-        // Подписываемся на результат преобразования
         response.json();
-        userName.value = '';
         commentFieldElement.value = '';
         send.disabled = true;
       }
     })
     .then(() => {
-
-      // Получили данные и рендерим их в приложении
       return takeAndRender();
-      /*
-      comments = responseData.comments;
-      
-      renderComments();
-      initButtonsLikes();
-      editClick();
-      liElClick();
-      */
     })
     .then((response) => {
       return response.json();
     })
     .then((responseData) => {
-      console.log(responseData);
       const appCommentsNew = responseData.comments.map((comment) => {
         return {
           name: comment.author.name,
@@ -147,37 +97,21 @@ export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
 
       comments = appCommentsNew;
 
+      const uploadingData = document.getElementById('uploading-data');
+      const userForm = document.getElementById('form');
+      uploadingData.style.display = 'none';
+      userForm.style.display = 'flex';
+
       renderComments();
       initButtonsLikes();
       liElClick();
       editClick();
-
-      uploadingData.style.display = 'none';
-      userForm.style.display = 'flex';
     })
     .catch((error) => {
+      const uploadingData = document.getElementById('uploading-data');
+      const userForm = document.getElementById('form');
       uploadingData.style.display = 'none';
       userForm.style.display = 'flex';
       alert(error);
     });
-
-  /*
-  //const oldCommentsList = commentsList.innerHTML;
-  comments.push({
-
-    //name: userName.value.replace('<', '&lt;').replace('>', '&gt;'),
-    date: getUserCommentDate(),
-    //comment: commentFieldElement.value.replace('<', '&lt;').replace('>', '&gt;'),
-    likes: countUsersLikes,
-    isLiked: initButtonsLikes(),
-
-  });
-
-  renderComments();
-  initButtonsLikes();
-  editClick();
-  liElClick();
-  */
 };
-
-// добавил этот коммент, чтобы обновить данные на своем репозитории
