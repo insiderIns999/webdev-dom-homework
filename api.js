@@ -10,6 +10,9 @@ const apiURL = 'https://wedev-api.sky.pro/api/v2/oleg-gagarin/comments';
 export function takeAndRender() {
   return fetch(apiURL, {
     method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 };
 
