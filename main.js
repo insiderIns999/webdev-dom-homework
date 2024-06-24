@@ -49,8 +49,8 @@ takeAndRender()
   
       comments = appComments;
 
-      renderComments();
       initButtonsLikes();
+      renderComments();
       editClick();
       liElClick();
   });

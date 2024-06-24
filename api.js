@@ -22,11 +22,11 @@ export function addComment({ text }) {
       method: 'POST',
       body: JSON.stringify({
         'text': text,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         forceError: true,
-      })
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 };
 

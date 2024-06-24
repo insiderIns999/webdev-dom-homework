@@ -1,12 +1,15 @@
-import { comments } from "./main.js";
-import { commentFieldElement } from "./commentForm.js";
-import { send } from "./commentForm.js";
+import { comments, updateComments } from "./main.js";
 
 export const editClick = () => {
     const editButtons = document.querySelectorAll('.edit-button');
-    const save = document.getElementById('save');
+
     editButtons.forEach((editButton, index) => {
       editButton.addEventListener('click', (event) => {
+
+        const commentFieldElement = document.getElementById('user-comment');
+        const save = document.getElementById('save');
+        const send = document.getElementById('send');
+
         event.stopPropagation();
         commentFieldElement.value = comments[index].comment;
         send.style.display = 'none';

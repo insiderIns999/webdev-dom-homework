@@ -63,6 +63,7 @@ body {
 
   .comment {
     padding: 48px;
+    margin-top: 10px;
   }
 
   .comment-header {
