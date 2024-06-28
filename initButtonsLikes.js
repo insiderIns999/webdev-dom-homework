@@ -15,19 +15,25 @@ export function initButtonsLikes() {
       buttonElement.addEventListener('click', (event) => {
   
         event.stopPropagation();
-  
-        buttonElement.classList.add('-loading-like');
-        delay(2000).then(() => {
-          comments[index].isLiked
-            ? --comments[index].likes
-            : ++comments[index].likes;
-          comments[index].isLiked = !comments[index].isLiked;
-          comments[index].isLikeLoading = false;
-          buttonElement.classList.remove('-loading-like');
-          
-          renderComments();
-          initButtonsLikes();
-        });
+        
+        if(token === undefined) {
+          return alert('Авторизуйтесь, чтобы оставлять комментарий, ставить лайки, редактировать комментарии и отвечать на комментарии');
+        }
+        else {
+
+          buttonElement.classList.add('-loading-like');
+          delay(2000).then(() => {
+            comments[index].isLiked
+              ? --comments[index].likes
+              : ++comments[index].likes;
+            comments[index].isLiked = !comments[index].isLiked;
+            comments[index].isLikeLoading = false;
+            buttonElement.classList.remove('-loading-like');
+            
+            initButtonsLikes();
+            renderComments();
+          });
+        }
       });
     });
   };

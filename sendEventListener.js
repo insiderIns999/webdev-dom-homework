@@ -3,6 +3,7 @@ import { sendComment } from "./main.js";
 import { uploadingData } from "./main.js";
 import { sendDisabled } from "./sendDisabled.js";
 //import { send } from "./commentForm.js";
+import { userNameFromApi } from "./commentForm.js";
 
 export function sendEventListener() {
 
@@ -21,10 +22,11 @@ export function sendEventListener() {
       }
       
       let afterReplaceUserComment = replaceSymbols(commentFieldElement.value);
+      let afterReplaceUserName = replaceSymbols(userNameFromApi);
     
       userForm.style.display = 'none';
       uploadingData.style.display = 'block';
-      sendComment(afterReplaceUserComment);
+      sendComment(afterReplaceUserName, afterReplaceUserComment);
       commentFieldElement.blur();
   });
 }

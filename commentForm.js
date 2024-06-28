@@ -43,5 +43,3 @@ export const renderCommentsForm = () => {
 
     sendEventListener();
 };
-
-// добавил этот коммент, чтобы обновить данные на своем репозитории

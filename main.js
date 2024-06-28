@@ -55,9 +55,9 @@ takeAndRender()
       liElClick();
   });
 
-export function sendComment(afterReplaceUserComment) {
+export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
 
-  addComment({ name: userNameFromApi, text: afterReplaceUserComment })
+  addComment({ name: afterReplaceUserName, text: afterReplaceUserComment })
   .then((response) => {
     const commentFieldElement = document.getElementById('user-comment');
     const send = document.getElementById('send');
