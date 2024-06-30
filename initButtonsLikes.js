@@ -1,6 +1,8 @@
 import { comments } from "./main.js";
 import { renderComments } from "./renderComments.js";
 import { token } from "./api.js";
+import { editClick } from "./editClick.js";
+import { liElClick } from "./liElClick.js";
 
 function delay(interval = 300) {
     return new Promise((resolve) => {
@@ -31,8 +33,10 @@ export function initButtonsLikes() {
             comments[index].isLikeLoading = false;
             buttonElement.classList.remove('-loading-like');
             
-            initButtonsLikes();
             renderComments();
+            liElClick();
+            editClick();
+            initButtonsLikes();
           });
         }
       });
