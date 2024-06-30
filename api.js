@@ -1,19 +1,45 @@
+const authorizationURL = 'https://wedev-api.sky.pro/api/user/login';
+
+export let token;
+export const updateToken = (newToken) => {
+  token = newToken;
+};
+
+const apiURL = 'https://wedev-api.sky.pro/api/v2/oleg-gagarin/comments';
+
 export function takeAndRender() {
-  return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+  return fetch(apiURL, {
     method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 };
 
-export function addComment({ name, text }) {
+export function addComment({ text }) {
 
-    console.log();
-
-    return fetch('https://wedev-api.sky.pro/api/v1/oleg-gagarin/comments', {
+    return fetch(apiURL, {
       method: 'POST',
       body: JSON.stringify({
-        'name': name,
         'text': text,
-        forceError: true
-      })
+        forceError: true,
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+};
+
+export function login({ login, password }) {
+
+  return fetch(authorizationURL, {
+    method: 'POST',
+    body: JSON.stringify({
+      login,
+      password,
+    })
+  })
+  .then((response) => {
+    return response.json();
+  });
 };

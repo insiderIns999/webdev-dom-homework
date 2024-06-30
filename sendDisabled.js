@@ -1,15 +1,16 @@
-export function sendDisabled({ send, userName, commentFieldElement }) {
+//import { send } from "./commentForm.js";
 
-    const userNameComment = [userName, commentFieldElement];
-  
-    for (let i = 0; i < userNameComment.length; i++) {
-      userNameComment[i].addEventListener('input', () => {
-        if (userNameComment.every((el) => el.value !== '')) {
-          return send.disabled = false;
-        }
-        else {
-          return send.disabled = true;
-        }
-      });
-    };
-  }
+export function sendDisabled() {
+
+  const commentFieldElement = document.getElementById('user-comment');
+  const send = document.getElementById('send');
+
+  commentFieldElement.addEventListener('input', () => {
+    if (commentFieldElement.value !== '') {
+      return send.disabled = false;
+    }
+    else {
+      return send.disabled = true;
+    }
+  });
+};
