@@ -1,5 +1,6 @@
 import { comments } from "./main.js";
 import { renderComments } from "./renderComments.js";
+import { token } from "./api.js";
 
 function delay(interval = 300) {
     return new Promise((resolve) => {

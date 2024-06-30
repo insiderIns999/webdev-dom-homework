@@ -49,10 +49,10 @@ takeAndRender()
   
       comments = appComments;
 
-      initButtonsLikes();
       renderComments();
-      editClick();
       liElClick();
+      editClick();
+      initButtonsLikes();
   });
 
 export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
@@ -103,9 +103,9 @@ export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
       userForm.style.display = 'flex';
 
       renderComments();
-      initButtonsLikes();
       liElClick();
       editClick();
+      initButtonsLikes();
     })
     .catch((error) => {
       const uploadingData = document.getElementById('uploading-data');
