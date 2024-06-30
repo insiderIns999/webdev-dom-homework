@@ -6,6 +6,7 @@ import { sendEventListener } from './sendEventListener.js';
 
 import { userNameFromApi } from './commentForm.js';
 import { updateUserName } from './commentForm.js';
+import { renderAuthForm } from './reg.js';
 
 export const authForm = () => {
 
@@ -19,21 +20,19 @@ export const authForm = () => {
         const authFormElement = document.getElementById('add-comment-form');
 
         const authFormHtml = `
-            <div id="form-auth" class="add-form auth-form">
+        <div id="form-auth" class="add-form auth-form">
             <input id="user-login" type="text" name="login" class="add-form-name" placeholder="Введите логин" />
             <br />
             <input id="user-password" type="password" name="password" class="add-form-name" placeholder="Введите пароль" />
             <div class="add-form-row auth-form-row">
             <button id="auth-button" class="auth-form-button add-form-button" disabled>Войти</button>
             </div>
-            <a href="index.html">Перейти на страницу комментариев</a>
-            <p>Если не зарегистрированы,
-            <a href="reg.html"> Зарегистрироваться</aa>
-            </ap>
+            <p class="white">Если не зарегистрированы,
+            <a class="a-white" id="link-reg" href="#"> Зарегистрироваться</a>
         </div>
         <div id="uploading-data" class="uploading-data">
             <img class="uploader" src="loader.gif" alt="Индикатор загрузки" />
-            <p>Выполняется регистрация...</p>
+            <p>Выполняется авторизация...</p>
         </div>
         `;
 
@@ -65,5 +64,9 @@ export const authForm = () => {
                 return renderCommentsForm({ sendEventListener });
             })
         });
+
+        const linkRegElement = document.getElementById('link-reg');
+
+        linkRegElement.addEventListener('click', renderAuthForm());
     });
 }

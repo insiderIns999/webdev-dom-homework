@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Форма регистрации</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <!--
-      <div id="form-reg" class="add-form reg-form">
+export const renderAuthForm = () => {
+
+    const regFormElement = document.getElementById('add-comment-form');
+
+    const regFormHtml = `
+    <div id="form-reg" class="add-form reg-form">
         <input id="user-name" type="text" name="name" class="add-form-name" placeholder="Введите имя" />
         <br />
         <input id="user-login" type="text" name="login" class="add-form-name" placeholder="Введите логин" />
@@ -17,15 +12,14 @@
         <div class="add-form-row reg-form-row">
           <button id="reg-button" class="add-form-button" disabled>Зарегистрироваться</button>
         </div>
-        <a href="index.html">Перейти на страницу комментариев</a>
-        <a href="auth.html">Перейти на страницу авторизации</a>
+        <a class="a-white" href="index.html">Перейти на страницу комментариев</a>
+        <a class="a-white" href="auth.html">Перейти на страницу авторизации</a>
       </div>
       <div id="uploading-data" class="uploading-data">
         <img class="uploader" src="loader.gif" alt="Индикатор загрузки" />
         <p>Выполняется регистрация...</p>
       </div>
-    -->
-    </div>
-  </body>
-  <script type="module" src="reg.js"></script>
-</html>
+    `;
+
+    regFormElement.innerHTML = regFormHtml;
+}
