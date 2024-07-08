@@ -67,6 +67,6 @@ export const authForm = () => {
 
         const linkRegElement = document.getElementById('link-reg');
 
-        linkRegElement.addEventListener('click', renderAuthForm());
+        linkRegElement.addEventListener('click', renderAuthForm);
     });
 }

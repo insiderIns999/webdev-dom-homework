@@ -1,4 +1,5 @@
 const authorizationURL = 'https://wedev-api.sky.pro/api/user/login';
+const regURL = 'https://wedev-api.sky.pro/api/user';
 
 export let token;
 export const updateToken = (newToken) => {
@@ -43,3 +44,24 @@ export function login({ login, password }) {
     return response.json();
   });
 };
+
+export function registration({ login, name, password }) {
+
+  return fetch(regURL, {
+    method: 'POST',
+    body: JSON.stringify({
+      login,
+      name,
+      password,
+    })
+  })
+  .then((response) => {
+    if(response.status === 400) {
+      alert('Пользователь с таким логином уже зарегистрирован');
+    }
+    else {
+      return response.json();
+    }
+  });
+};
+
