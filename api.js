@@ -41,6 +41,12 @@ export function login({ login, password }) {
     })
   })
   .then((response) => {
+    if(response.status === 400) {
+      throw new Error('Неверный логин или пароль');
+    }
+    if(response.status === 500) {
+      throw new Error('Сервер упал');
+    }
     return response.json();
   });
 };
@@ -57,11 +63,11 @@ export function registration({ login, name, password }) {
   })
   .then((response) => {
     if(response.status === 400) {
-      alert('Пользователь с таким логином уже зарегистрирован');
+      throw new Error('Пользователь с таким логином уже зарегистрирован');
     }
-    else {
-      return response.json();
+    if(response.status === 500) {
+      throw new Error('Сервер упал');
     }
+    return response.json();
   });
 };
-

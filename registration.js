@@ -15,6 +15,14 @@ export function registrationNewUser() {
         let relaceLogin = replaceSymbols(userLogin);
         let relaceName = replaceSymbols(userName);
 
-        registration(relaceLogin, relaceName, userPassword);
+        registration(relaceLogin, relaceName, userPassword)
+        .then((responseData) => {
+            localStorage.setItem('name', responseData.user.name);
+            localStorage.setItem('token', responseData.user.token);
+            alert('Вы успешно зарегистрировались');
+        })
+        .catch((err) => {
+            alert(err.message);
+        })
     });
 }

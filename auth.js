@@ -58,10 +58,14 @@ export const authForm = () => {
             login({
                 login: loginInputElement.value,
                 password: passwordInputElement.value,
-            }).then((responseData) => {
+            })
+            .then((responseData) => {
                 updateToken(responseData.user.token);
                 updateUserName(responseData.user.name);
                 return renderCommentsForm({ sendEventListener });
+            })
+            .catch((err) => {
+                alert(err.message);
             })
         });
 

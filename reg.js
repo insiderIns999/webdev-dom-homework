@@ -1,3 +1,5 @@
+import { authForm } from "./auth.js";
+
 export const renderAuthForm = () => {
 
     const regFormElement = document.getElementById('add-comment-form');
@@ -12,8 +14,7 @@ export const renderAuthForm = () => {
         <div class="add-form-row reg-form-row">
           <button id="reg-button" class="add-form-button" disabled>Зарегистрироваться</button>
         </div>
-        <a class="a-white" href="index.html">Перейти на страницу комментариев</a>
-        <a class="a-white" href="auth.html">Перейти на страницу авторизации</a>
+        <a id="authorization-button" class="a-white" href="#">Войти</a>
       </div>
       <div id="uploading-data" class="uploading-data">
         <img class="uploader" src="loader.gif" alt="Индикатор загрузки" />
@@ -22,4 +23,7 @@ export const renderAuthForm = () => {
     `;
 
     regFormElement.innerHTML = regFormHtml;
+
+    const linkAuthElement = document.getElementById('authorization-button');
+    linkAuthElement.addEventListener('click', authForm);
 }
