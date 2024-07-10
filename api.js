@@ -1,10 +1,10 @@
 const authorizationURL = 'https://wedev-api.sky.pro/api/user/login';
 const regURL = 'https://wedev-api.sky.pro/api/user';
 
-export let token;
-export const updateToken = (newToken) => {
-  token = newToken;
-};
+export let token = localStorage.getItem('token');
+//export const updateToken = (newToken) => {
+  //token = newToken;
+//};
 
 const apiURL = 'https://wedev-api.sky.pro/api/v2/oleg-gagarin/comments';
 

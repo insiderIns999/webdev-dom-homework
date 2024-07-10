@@ -1,6 +1,5 @@
 import { sendComment } from "./main.js";
 //import { userForm } from "./main.js";
-import { uploadingData } from "./main.js";
 import { sendDisabled } from "./sendDisabled.js";
 //import { send } from "./commentForm.js";
 import { userNameFromApi } from "./commentForm.js";

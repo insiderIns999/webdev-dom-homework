@@ -8,7 +8,6 @@ import { editClick } from "./editClick.js";
 import { liElClick } from "./liElClick.js";
 import { initButtonsLikes } from "./initButtonsLikes.js";
 import { authForm } from "./auth.js";
-import { userNameFromApi } from "./commentForm.js";
 
 export const userForm = document.getElementById('form');
 

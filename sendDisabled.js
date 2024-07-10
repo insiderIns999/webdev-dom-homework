@@ -1,5 +1,3 @@
-//import { send } from "./commentForm.js";
-
 export function sendDisabled() {
 
   const commentFieldElement = document.getElementById('user-comment');
