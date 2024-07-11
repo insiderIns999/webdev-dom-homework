@@ -9,7 +9,7 @@ export const editClick = () => {
 
         event.stopPropagation();
         
-        if(token === undefined) {
+        if(token === null) {
           return alert('Авторизуйтесь, чтобы оставлять комментарий, ставить лайки, редактировать комментарии и отвечать на комментарии');
         }
         else {

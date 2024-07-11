@@ -8,6 +8,10 @@ import { editClick } from "./editClick.js";
 import { liElClick } from "./liElClick.js";
 import { initButtonsLikes } from "./initButtonsLikes.js";
 import { authForm } from "./auth.js";
+import { token } from "./api.js";
+import { userNameFromApi } from "./commentForm.js";
+import { sendEventListener } from "./sendEventListener.js";
+import { renderCommentsForm } from "./commentForm.js";
 
 export const userForm = document.getElementById('form');
 
@@ -18,8 +22,6 @@ export let comments = [];
 export const updateComments = newComments => {
   comments = newComments;
 }
-
-authForm();
 
 takeAndRender()
   .then((response) => {
@@ -53,6 +55,21 @@ takeAndRender()
       editClick();
       initButtonsLikes();
   });
+
+  /*
+  const commentFormElement = document.getElementById('add-comment-form');
+
+  if(token === '') {
+    commentFormElement.innerHTML = `
+      <p class="white">Чтобы добавить комментарий
+        <a class="a-white" id="authorization-button"  href="#">авторизуйтесь</a>
+      </p>
+    `;
+  }
+  */
+
+  authForm();
+
 
 export function sendComment(afterReplaceUserName, afterReplaceUserComment) {
 

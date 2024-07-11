@@ -24,7 +24,6 @@ export const renderCommentsForm = () => {
             <button id="send" class="add-form-button" disabled>Отправить</button>
         </div>
     </div>
-    <a href="reg.html">Перейти на страницу регистрации</a>
     <div id="uploading-data" class="uploading-data">
         <img class="uploader" src="loader.gif" alt="Индикатор загрузки" />
         <p>Комментарий добавляется...</p>
@@ -36,7 +35,7 @@ export const renderCommentsForm = () => {
     const commentsElement = document.getElementById('user-comments');
     commentsElement.style.display = 'block';
 
-    const userNameElement = document.getElementById('user-name');
+    let userNameElement = document.getElementById('user-name');
     userNameElement.value = `${userNameFromApi}`;
     userNameElement.disabled = true;
 

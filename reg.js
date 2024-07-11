@@ -111,10 +111,14 @@ export const renderAuthForm = () => {
       return string.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('QUOTE_BEGIN', '<div class="quote">').replaceAll('QUOTE_END', '</div><br /><br />');
     }
 
-    let relaceLogin = replaceSymbols(userLogin.value);
-    let relaceName = replaceSymbols(userName.value);
+    let replaceLogin = replaceSymbols(userLogin.value);
+    let replaceName = replaceSymbols(userName.value);
 
-    registration(relaceLogin, relaceName, userPassword)
+    registration({
+        login: replaceLogin,
+        name: replaceName,
+        password: userPassword.value,
+    })
     .then(() => {
         alert('Вы успешно зарегистрировались');
     })

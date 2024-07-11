@@ -29,7 +29,7 @@ export const renderComments = () => {
             </div>
           </li>`;
     }).join('');
-    
+
     commentsList.innerHTML = commentsHtml;
 
     updateComments(comments);

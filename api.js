@@ -52,7 +52,7 @@ export function login({ login, password }) {
 };
 
 export function registration({ login, name, password }) {
-
+  console.log(login, name, password);
   return fetch(regURL, {
     method: 'POST',
     body: JSON.stringify({
