@@ -1,9 +1,9 @@
 import { login } from './api.js';
-//import { token } from './api.js';
-//import { updateToken } from './api.js';
+import { token } from './api.js';
+import { updateToken } from './api.js';
 import { renderCommentsForm } from './commentForm.js';
-//import { userNameFromApi } from './commentForm.js';
-//import { updateUserName } from './commentForm.js';
+import { userNameFromApi } from './commentForm.js';
+import { updateUserName } from './commentForm.js';
 import { renderAuthForm } from './reg.js';
 
 export const authForm = () => {
@@ -58,8 +58,8 @@ export const authForm = () => {
                 password: passwordInputElement.value,
             })
             .then((responseData) => {
-                localStorage.setItem('name', responseData.user.name);
-                localStorage.setItem('token', responseData.user.token);
+                updateUserName(responseData.user.name); //localStorage.setItem('name', responseData.user.name);
+                updateToken(responseData.user.token); //localStorage.setItem('token', responseData.user.token);
                 return renderCommentsForm({ sendEventListener });
             })
             .catch((err) => {

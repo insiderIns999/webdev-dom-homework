@@ -5,10 +5,10 @@ export const userName = document.getElementById('user-name');
 
 export const commentFieldElement = document.getElementById('user-comment');
 
-export let userNameFromApi = localStorage.getItem('name');
-//export const updateUserName = (newUserName) => {
-    //userNameFromApi = newUserName;
-//};
+export let userNameFromApi; //= localStorage.getItem('name');
+export const updateUserName = (newUserName) => {
+    userNameFromApi = newUserName;
+};
 
 export const renderCommentsForm = () => {
 
