@@ -1,5 +1,8 @@
 import { comments } from "./main.js";
 import { renderComments } from "./renderComments.js";
+import { token } from "./api.js";
+import { editClick } from "./editClick.js";
+import { liElClick } from "./liElClick.js";
 
 function delay(interval = 300) {
     return new Promise((resolve) => {
@@ -15,30 +18,27 @@ export function initButtonsLikes() {
       buttonElement.addEventListener('click', (event) => {
   
         event.stopPropagation();
-  
-        buttonElement.classList.add('-loading-like');
-        delay(2000).then(() => {
-          comments[index].isLiked
-            ? --comments[index].likes
-            : ++comments[index].likes;
-          comments[index].isLiked = !comments[index].isLiked;
-          comments[index].isLikeLoading = false;
-          buttonElement.classList.remove('-loading-like');
-          
-          renderComments();
-          initButtonsLikes();
-        });
-  
-        /*
-        if (comments[index].isLiked) {
-          comments[index].likes = comments[index].likes - 1;
-          comments[index].isLiked = false;
+        
+        if(token === null) {
+          return alert('Авторизуйтесь, чтобы оставлять комментарий, ставить лайки, редактировать комментарии и отвечать на комментарии');
         }
         else {
-          comments[index].likes = comments[index].likes + 1;
-          comments[index].isLiked = true;
+
+          buttonElement.classList.add('-loading-like');
+          delay(2000).then(() => {
+            comments[index].isLiked
+              ? --comments[index].likes
+              : ++comments[index].likes;
+            comments[index].isLiked = !comments[index].isLiked;
+            comments[index].isLikeLoading = false;
+            buttonElement.classList.remove('-loading-like');
+            
+            renderComments();
+            liElClick();
+            editClick();
+            initButtonsLikes();
+          });
         }
-        */
       });
     });
   };
